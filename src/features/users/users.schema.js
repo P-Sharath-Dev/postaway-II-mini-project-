@@ -35,21 +35,6 @@ const userSchema = new mongoose.Schema({
       type: String,
     },
   ],
-  friends: [
-    //many to many (ONE-USER can have multiple firends and ONE-Friend can have multiple friends)
-    //stores id's of users who became friends with current user
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
-  pendingRequests: [
-    //stores id's of users who sent friend request to current logged in user
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
 });
 
 const UserModel = mongoose.model("User", userSchema);
