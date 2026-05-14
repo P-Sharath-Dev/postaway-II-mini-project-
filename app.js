@@ -7,6 +7,7 @@ import ApplicationError from "./src/error_handler/app.error.js";
 import { appLevelErrorHandlerMiddleware } from "./src/error_handler/app.error.js";
 import userRoutes from "./src/features/users/users.routes.js";
 import postRoutes from "./src/features/posts/posts.routes.js";
+import commentRoutes from "./src/features/comments/comments.routes.js";
 
 //connecting to db
 connectToDBWithMongosoose();
@@ -24,6 +25,9 @@ app.use("/api/users", userRoutes);
 
 //postsRoutes
 app.use("/api/posts", postRoutes);
+
+//commentsRoutes
+app.use("/api/comments", commentRoutes);
 
 app.use(appLevelErrorHandlerMiddleware);
 
