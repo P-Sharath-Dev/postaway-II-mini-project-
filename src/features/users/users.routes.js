@@ -49,15 +49,15 @@ router.put(
   },
 );
 
-//----->logout
+//----->logout from current device
 //domainName.com/api/users/logout
-router.get("/logout", jwtAuth, (req, res, next) => {
-  userController.login(req, res, next);
+router.post("/logout", jwtAuth, (req, res, next) => {
+  userController.logout(req, res, next);
 });
 
 //----->logout from all devices
 //domainName.com/api/users/logout-all-devices
-router.get("/logout-all-devices", jwtAuth, (req, res, next) => {
+router.post("/logout-all-devices", jwtAuth, (req, res, next) => {
   userController.logoutFromAllDevices(req, res, next);
 });
 

@@ -187,8 +187,43 @@ export default class UserController {
   }
 
   //logout
-  async logout(req, res, next) {}
+  async logout(req, res, next) {
+    try {
+      //getting user id
+      const userId = req.userId;
+
+      //getting current token from Headers
+      const token = req.headers.authorization;
+
+      const result = await this.userRepository.logout(userId, token);
+
+      if (!result.success) {
+        return res.status(result.error.statusCode).send(result.error.msg);
+      }
+
+      return res.status(200).send(result.res);
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  }
 
   //logout from all devices
-  async logoutFromAllDevices(req, res, next) {}
+  async logoutFromAllDevices(req, res, next) {
+    try {
+      const userId = req.userId;
+
+      const result = await this.userRepository.logoutFromAllDevices(userId);
+
+      //if failed
+      if (!result.success) {
+        return res.status(result.error.statusCode).send(result.error.msg);
+      }
+
+      return res.status(200).send(result.res);
+    } catch (e) {
+      console.log(e);
+      next(e);
+    }
+  }
 }

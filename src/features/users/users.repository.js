@@ -179,9 +179,87 @@ export default class UserRepository {
     }
   }
 
-  //logout
-  async logout(userId, token) {}
+  //logout from current device
+  //users tokens are saved in tokens[] array. everytime user login a new token will be created and it will be added in tokens[] array.
+  async logout(userId, token) {
+    //if we delete the currently loggedIN token from tokens array then user will be logged out from current device
+    try {
+      const user = await UserModel.findById(userId);
+
+      //if user not found
+      if (!user) {
+        return {
+          success: false,
+          error: {
+            statusCode: 404,
+            msg: "User not found",
+          },
+        };
+      }
+
+      const updatedTokens = []; // for storing tokens which dont match with current logged in token
+
+      //looping through all stored tokens in tokens[](means user.tokens array)
+      for (const currentToken of user.tokens) {
+        //push user.tokens to updatedTokens which are dont match with currently logged in token
+        if (currentToken !== token) {
+          //one token from multiple user.tokens;
+          updatedTokens.push(currentToken);
+        }
+      }
+
+      //updating tokens array
+      user.tokens = updatedTokens;
+
+      await user.save();
+
+      return {
+        success: true,
+        res: "you are logged out from the app",
+      };
+    } catch (e) {
+      return {
+        success: false,
+        error: {
+          statusCode: 400,
+          msg: e.message,
+        },
+      };
+    }
+  }
 
   //logout from all devices
-  async logoutFromAllDevices(userId) {}
+  async logoutFromAllDevices(userId) {
+    try {
+      const user = await UserModel.findById(userId);
+
+      //user not found
+      if (!user) {
+        return {
+          success: false,
+          error: {
+            statusCode: 404,
+            msg: "user not found",
+          },
+        };
+      }
+
+      // clear all tokens
+      user.tokens = [];
+      await user.save();
+
+      return {
+        success: true,
+        res: "you are logged out from all devices",
+      };
+    } catch (e) {
+      return {
+        success: false,
+        error: {
+          statusCode: 400,
+          msg: e.message,
+        },
+      };
+    }
+  }
 }
