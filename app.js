@@ -10,6 +10,7 @@ import postRoutes from "./src/features/posts/posts.routes.js";
 import commentRoutes from "./src/features/comments/comments.routes.js";
 import likeRoutes from "./src/features/likes/likes.routes.js";
 import friendshipRoutes from "./src/features/friendships/friendships.routes.js";
+import otpRoutes from "./src/features/otp/otp.routes.js";
 
 //connecting to db
 connectToDBWithMongosoose();
@@ -36,6 +37,9 @@ app.use("/api/likes", likeRoutes);
 
 //friendshipsRoutes
 app.use("/api/friendships", friendshipRoutes);
+
+//otpRoutes
+app.use("/api/otp", otpRoutes);
 
 app.use(appLevelErrorHandlerMiddleware);
 
