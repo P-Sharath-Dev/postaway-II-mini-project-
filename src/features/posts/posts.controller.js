@@ -13,13 +13,25 @@ export default class PostController {
       const userId = req.userId;
 
       //getting data from req
-      const { caption, imageUrl } = req.body;
+      const { caption } = req.body;
 
       const postData = {
         caption,
-        imageUrl,
         userId,
       };
+
+      //if media uploaded
+      if (req.file) {
+        postData.mediaUrl = "/public/uploads/posts/" + req.file.filename;
+      }
+
+      //checking media type (image or video)
+      if (req.file.mimetype.startsWith("image")) {
+        postData.mediaType = "image";
+      } else if (req.file.mimetype.startsWith("video")) {
+        postData.mediaType = "video";
+      }
+
       const result = await this.postRepository.createPost(postData);
 
       //if failed
@@ -81,14 +93,23 @@ export default class PostController {
       const userId = req.userId;
 
       //get data from req
-      const { caption, imageUrl } = req.body;
+      const { caption } = req.body;
 
       const updatedData = {};
       if (caption) {
         updatedData.caption = caption;
       }
-      if (imageUrl) {
-        updatedData.imageUrl = imageUrl;
+      if (req.file) {
+        //upload file path
+        updatedData.mediaUrl = "/public/uploads/posts/" + req.file.filename;
+      }
+
+      //check media type
+      if (req.file.mimetype.startsWith("image")) {
+        updatedData.mediaType = "image";
+      }
+      if (req.file.mimetype.startsWith("video")) {
+        updatedData.mediaType = "video";
       }
 
       //update data

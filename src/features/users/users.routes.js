@@ -1,6 +1,7 @@
 import express from "express";
 import UserController from "./users.controller.js";
 import jwtAuth from "../../middlewares/user/jwt.middleware.js";
+import avatarUpload from "../../middlewares/uploads/avatarUpload.middleware.js";
 
 // creating instance of UserController
 const userController = new UserController();
@@ -9,9 +10,14 @@ const router = express.Router();
 
 //----->signup
 //domainName.com/api/users/signup
-router.post("/signup", (req, res, next) => {
-  userController.signUp(req, res, next);
-});
+router.post(
+  "/signup",
+  //fileUpload
+  avatarUpload.single("avatar"),
+  (req, res, next) => {
+    userController.signUp(req, res, next);
+  },
+);
 
 //----->login
 //domainName.com/api/users/login
@@ -33,9 +39,15 @@ router.get("/get-all-details", jwtAuth, (req, res, next) => {
 
 //----->update user
 //domainName.com/api/users/update-details
-router.put("/update-details", jwtAuth, (req, res, next) => {
-  userController.updateUser(req, res, next);
-});
+router.put(
+  "/update-details",
+  jwtAuth,
+  //fileUpload
+  avatarUpload.single("avatar"),
+  (req, res, next) => {
+    userController.updateUser(req, res, next);
+  },
+);
 
 //----->logout
 //domainName.com/api/users/logout

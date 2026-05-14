@@ -6,9 +6,18 @@ const postSchema = new mongoose.Schema( //.Schema creates schema
       type: String,
       required: [true, "Caption is required"],
     },
-    imageUrl: {
+    // imageUrl: {
+    //   type: String,
+    //   default: "", // if no data received from user then empty string will be added as value
+    // },
+    mediaUrl: {
       type: String,
       default: "", // if no data received from user then empty string will be added as value
+    },
+    mediaType: {
+      type: String,
+      enum: ["image", "video"],
+      default: "image",
     },
     userId: {
       //one-to-many relationship

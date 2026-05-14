@@ -16,6 +16,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+//serving static files
+app.use("/public", express.static("public"));
+
 //userRoutes
 app.use("/api/users", userRoutes);
 

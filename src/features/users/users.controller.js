@@ -12,7 +12,14 @@ export default class UserController {
   //signup
   async signUp(req, res, next) {
     try {
-      const { name, email, password, gender, avatar } = req.body;
+      const { name, email, password, gender } = req.body;
+
+      //adding avatar image
+      let avatar = "";
+
+      if (req.file) {
+        avatar = "/public/uploads/avatars/" + req.file.filename;
+      }
 
       //hashing password
       const hashedPassowrd = await bcrypt.hash(password, 12); //12 salt rounds
@@ -38,7 +45,7 @@ export default class UserController {
           },
         });
       } else {
-        next(e);
+        return res.status(404).send("user not created");
       }
 
       //   return res.status(201).send(newUser); //this will give all the user userData
@@ -148,7 +155,7 @@ export default class UserController {
       const userId = req.userId; //gets data from Headers->Authorization->token
 
       //getting updated userData
-      const { name, gender, avatar } = req.body;
+      const { name, gender } = req.body;
 
       const userData = {}; //to store data comming from req.body;
       if (name) {
@@ -157,8 +164,8 @@ export default class UserController {
       if (gender) {
         userData.gender = gender;
       }
-      if (avatar) {
-        userData.avatar = avatar;
+      if (req.file) {
+        userData.avatar = "/public/uploads/avatars/" + req.file.filename;
       }
 
       //   const userData = {
