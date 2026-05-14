@@ -1,4 +1,6 @@
 import PostModel from "./posts.schema.js";
+import LikeModel from "../likes/likes.schema.js"; // for counting likes
+import CommentModel from "../comments/comments.schema.js"; // for counting comments
 
 export default class PostRepository {
   //create post
@@ -32,7 +34,7 @@ export default class PostRepository {
     try {
       const posts = await PostModel.find(
         {},
-        "-_id caption imageUrl userId createdAt updatedAt",
+        "caption mediaUrl mediaType userId createdAt updatedAt",
       )
         //populate replaces userId with actual user document
         .populate("userId", "-_id name gender avatar");
@@ -46,9 +48,36 @@ export default class PostRepository {
           },
         };
       }
+
+      const updatedPosts = [];
+
+      //looping through all posts
+      for (let i = 0; i < posts.length; i++) {
+        const currentPost = posts[i];
+
+        //count total likes of current post
+        const likesCount = await LikeModel.countDocuments({
+          postId: currentPost._id,
+        });
+
+        //count total comments of current post
+        const commentsCount = await CommentModel.countDocuments({
+          postId: currentPost._id,
+        });
+
+        updatedPosts.push({
+          //spread operator
+          //copies all properties of post object
+          ...currentPost.toObject(), //toObject() converts mongoose document into normal javascript object
+
+          likesCount,
+          commentsCount,
+        });
+      }
+
       return {
         success: true,
-        res: posts,
+        res: updatedPosts,
       };
     } catch (e) {
       return {
@@ -83,10 +112,29 @@ export default class PostRepository {
           },
         };
       }
+      //count total likes of current post
+      const likesCount = await LikeModel.countDocuments({
+        postId: post._id,
+      });
+
+      //count total comments of current post
+      const commentsCount = await CommentModel.countDocuments({
+        postId: post._id,
+      });
+
+      const updatedPost = {
+        //spread operator
+        //copies all properties of post object
+        ...post.toObject(), //toObject() converts mongoose document into normal javascript object
+
+        likesCount,
+
+        commentsCount,
+      };
 
       return {
         success: true,
-        res: post,
+        res: updatedPost,
       };
     } catch (e) {
       return {

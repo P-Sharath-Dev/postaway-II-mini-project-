@@ -43,6 +43,13 @@ const userSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
+  pendingRequests: [
+    //stores id's of users who sent friend request to current logged in user
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
 });
 
 const UserModel = mongoose.model("User", userSchema);

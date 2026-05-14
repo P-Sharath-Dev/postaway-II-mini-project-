@@ -8,6 +8,8 @@ import { appLevelErrorHandlerMiddleware } from "./src/error_handler/app.error.js
 import userRoutes from "./src/features/users/users.routes.js";
 import postRoutes from "./src/features/posts/posts.routes.js";
 import commentRoutes from "./src/features/comments/comments.routes.js";
+import likeRoutes from "./src/features/likes/likes.routes.js";
+import friendshipRoutes from "./src/features/friendships/friendships.routes.js";
 
 //connecting to db
 connectToDBWithMongosoose();
@@ -28,6 +30,12 @@ app.use("/api/posts", postRoutes);
 
 //commentsRoutes
 app.use("/api/comments", commentRoutes);
+
+//likesRoutes
+app.use("/api/likes", likeRoutes);
+
+//friendshipsRoutes
+app.use("/api/friendships", friendshipRoutes);
 
 app.use(appLevelErrorHandlerMiddleware);
 
