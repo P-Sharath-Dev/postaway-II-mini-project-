@@ -65,6 +65,27 @@ export default class OtpController {
 
       // otp not found
       if (!result.success) {
+        // return res.status(result.error.statusCode).send(result.error.msg);
+
+        //increase wrong otp attempts
+        const attemptResult = await this.optRepository.increaseAttempts(email);
+
+        //get updated attempts
+        const attempts = attemptResult.res.attempts;
+
+        //sending warning email after three attempts
+        if (attempts >= 3) {
+          await transporter.sendMail({
+            sender: process.env.EMAIL,
+            to: email,
+            subject: "Security alert",
+            text: "someone is trying to access your account. ",
+          });
+          return res
+            .status(result.error.statusCode)
+            .send("you have entered multiple wrong otp's");
+        }
+
         return res.status(result.error.statusCode).send(result.error.msg);
       }
 
@@ -104,6 +125,14 @@ export default class OtpController {
 
       // delete opt after password reset
       await this.optRepository.deleteOtp(email);
+
+      //sending emai saying that your password is changed
+      await transporter.sendMail({
+        sender: process.env.EMAIL,
+        to: email,
+        subject: "password changed",
+        text: "your password is changed",
+      });
       return res.status(200).send("password reset successfull");
     } catch (e) {
       console.log(e);

@@ -36,6 +36,43 @@ export default class OptRepository {
     }
   }
 
+  //no.of attemps - wrong otp
+  async increaseAttempts(email) {
+    try {
+      const otpDocument = await OtpModel.findOneAndUpdate(
+        { email },
+        {
+          $inc: {
+            attempts: 1,
+          },
+        },
+        { returnDocument: "after" },
+      );
+
+      // if (!otpDoc) {
+      //   return {
+      //     success: false,
+      //     error: {
+      //       statusCode: 404,
+      //       msg: "otp not found",
+      //     },
+      //   };
+      // }
+      return {
+        success: true,
+        res: otpDocument,
+      };
+    } catch (e) {
+      return {
+        success: false,
+        error: {
+          statusCode: 400,
+          msg: e.message,
+        },
+      };
+    }
+  }
+
   //find otp
   async findOtp(email, otp) {
     try {

@@ -13,6 +13,10 @@ const otpSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  attempts: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const OtpModel = mongoose.model("Otp", otpSchema);
