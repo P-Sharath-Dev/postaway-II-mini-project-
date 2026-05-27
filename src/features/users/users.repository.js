@@ -71,7 +71,7 @@ export default class UserRepository {
   async storeToken(userId, token) {
     try {
       //finding user
-      const user = await UserModel.findOne(userId);
+      const user = await UserModel.findById(userId);
 
       //adding token to tokens inside userSchema
       user.tokens.push(token);
